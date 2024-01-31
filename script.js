@@ -3,74 +3,72 @@ let searchTitle = document.getElementById("title-search");
 let searchArtist = document.getElementById("artist-search");
 let searchAlbum = document.getElementById("album-search");
 let searchLink = document.getElementById("link-search");
-let playlist = []; // Later, make this load playlist from spotify
+let playlist = [
+  {
+    cover: "https://www.w3schools.com/images/colorpicker2000.png",
+    title: "Mr.Tambourine Man",
+    artist: "Bob Dylan",
+    link: "https://classroom.google.com/u/2/h",
+  }
+]; // Later, make this load playlist from spotify
 
-searchButton.addEventListener("click", function () => {
-  let searchType = "";
-  if (searchTitle.value.length > 0) {
-    searchType = "title";
-  }
-  else if (searchArtist.value.length > 0) {
-    searchType = "artist";
-  }
-  else if (searchAlbum.value.length > 0) {
-    searchType = "album";
-  }
-  else if (searchLink.value.length > 0) {
-    searchType = "link";
-  }
-  else {
-    return;
-  }
+showPlaylist(); // Start by displaying the playlist
 
-  querySpotify(searchType);
-});
+// searchButton.addEventListener("click", function () => {
+//   let searchType = "";
+//   if (searchTitle.value.length > 0) {
+//     searchType = "title";
+//   }
+//   else if (searchArtist.value.length > 0) {
+//     searchType = "artist";
+//   }
+//   else if (searchAlbum.value.length > 0) {
+//     searchType = "album";
+//   }
+//   else if (searchLink.value.length > 0) {
+//     searchType = "link";
+//   }
+//   else {
+//     return;
+//   }
 
-function querySpotify(searchType) {
-  if (searchType === "link") {
-    // Look for the exact song link
-  }
-  else {
-    // Use searchType as the filter for the search query
-  }
-}
+//   querySpotify(searchType);
+// });
+
+// function querySpotify(searchType) {
+//   if (searchType === "link") {
+//     // Look for the exact song link
+//   }
+//   else {
+//     // Use searchType as the filter for the search query
+//   }
+// }
 
 function showPlaylist() { // Fill a table with all of the data from the playlist and display it
-  let playlistHTMLTable = document.createElement("table");
-  let tableRow = document.createElement("tr");
-
-  tableRow.appendChild(makeHeading("Album Cover"));
-  tableRow.appendChild(makeHeading("Title"));
-  tableRow.appendChild(makeHeading("Artist"));
-  tableRow.appendChild(makeHeading("Duration"));
-  tableRow.appendChild(makeHeading("Date Added"));
-  tableRow.appendChild(makeHeading("Link (Spotify)"));
-  playlistHTMLTable.appendChild(tableRow);
+  let tableHeaders = ["Album Cover", "Title", "Artist", "Link"];
+  let table = document.createElement("table");
+  
+  let thead = document.createElement('thead');
+  table.appendChild(thead);
+  for (let i = 0; i < tableHeaders.length; i++) {
+    thead.appendChild(document.createElement("th")).
+      appendChild(document.createTextNode(tableHeaders[i]));
+  }
 
   for (let i = 0; i < playlist.length; i++) {
-    tableRow = document.createElement("tr");
-    tableRow.appendChild(`<img src="${playlist[i].cover}" alt="Album Cover">`);
-    tableRow.appendChild(makeCell(playlist[i].title));
-    tableRow.appendChild(makeCell(playlist[i].artist));
-    tableRow.appendChild(makeCell(playlist[i].duration));
-    tableRow.appendChild(makeCell(playlist[i].dateAdded));
-    tableRow.appendChild(makeCell(playlist[i].link));
-    playlistHTMLTable.appendChild(tableRow);
+    table.insertRow();
+    let row = table.rows[i];
+    row.appendChild(document.createElement("td")).appendChild(document.createElement("img"));
+    row.appendChild(document.createElement("td")).appendChild(document.createTextNode(playlist[i].title));
+    row.appendChild(document.createElement("td")).appendChild(document.createTextNode(playlist[i].artist));
+    row.appendChild(document.createElement("td")).appendChild(document.createElement("a"));
+
+    row.cells[0].src = playlist[i].cover;
+    row.cells[0].alt = "Album Cover";
+    row.cells[3].href = playlist[i].link;
+    row.cells[3].target = "_blank";
   }
   
   let songList = document.getElementById("song-list");
-  songList.removeChild(songList.firstChild);
-  songList.appendChild(playlistHTMLTable);
-}
-
-function makeHeading(title) {
-  let cell = document.createElement("th");
-  cell.innerHTML = title;
-  return cell;
-}
-
-function makeCell(title) {
-  let cell = document.createElement("td");
-  cell.innerHTML = title;
-  return cell;
+  songList.appendChild(table);
 }
