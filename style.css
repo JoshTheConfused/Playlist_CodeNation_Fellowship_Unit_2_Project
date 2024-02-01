@@ -2,3 +2,20 @@ html {
   height: 100%;
   width: 100%;
 }
+
+body {
+  background-color: #000;
+}
+
+#search-bar {
+  padding: 5px;
+  background-color: #19b80b;
+}
+
+th {
+  color: #19b80b;
+}
+
+td {
+  background-color: #888;
+}

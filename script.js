@@ -57,7 +57,7 @@ function playlistContains(song) {
 
 function addPlusButtons() { // Puts a button next to every search result to add it to the playlist
   for (let i = 0; i < searchResults.length; i++) {
-    let button = rows[i].insertCell().appendChild(document.createElement("input"));
+    let button = document.getElementById("song-list").children[0].rows[i].insertCell().appendChild(document.createElement("input"));
     button.type = "button";
     button.value = "+";
     let song = searchResults[i];
