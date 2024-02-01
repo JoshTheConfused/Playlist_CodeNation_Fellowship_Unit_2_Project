@@ -42,7 +42,26 @@ searchButton.addEventListener("click", function () {
   //   return;
   // }
   let searchResults;
-  searchResults = []; // For testing only
+  searchResults = [
+    {
+      cover: "https://www.w3schools.com/images/colorpicker2000.png",
+      title: "Mr.Tambourine Man",
+      artist: "Bob Dylan",
+      link: "https://classroom.google.com/u/2/h",
+    },
+    {
+      cover: "https://www.w3schools.com/images/colorpicker2000.png",
+      title: "Mr.Tambourine Man",
+      artist: "Bob Dylan",
+      link: "https://classroom.google.com/u/2/h",
+    },
+    {
+      cover: "https://www.w3schools.com/images/colorpicker2000.png",
+      title: "Mr.Tambourine Man",
+      artist: "Bob Dylan",
+      link: "https://classroom.google.com/u/2/h",
+    }
+  ]; // For testing only
   // searchResults = querySpotify(searchType);
   showSongList(searchResults);
   addPlusButtons();
@@ -55,26 +74,24 @@ searchButton.addEventListener("click", function () {
 // }
 
 function addPlusButtons() {
-  // let rows = document.getElementById("song-list").children[0].rows;
-  // for (let i = 1; i < rows.length; i++) {
-  //   function () {
-  //     let button = rows[i].insertCell().appendChild(document.createElement("input"));
-  //     button.type = "button";
-  //     button.value = "+";
-  //     button.addEventListener("click", function () {
-  //       let cover = row.cells[0].children[0].href;
-  //       let title = row.cells[1].children[0];
-  //       let artist = row.cells[0].children[0];
-  //       let link = row.cells[1].children[0].src;
-  //       playlist.push({
-  //         cover: cover,
-  //         title; title,
-  //         artist: artist,
-  //         link: link,
-  //       });
-  //     });
-  //   }
-  // }
+  let rows = document.getElementById("song-list").children[0].rows;
+  for (let i = 0; i < rows.length; i++) {
+      let button = rows[i].insertCell().appendChild(document.createElement("input"));
+      button.type = "button";
+      button.value = "+";
+      button.addEventListener("click", function () {
+        let cover = rows[i].cells[0].children[0].src;
+        let title = rows[i].cells[1].innerHTML;
+        let artist = rows[i].cells[2].innerHTML;
+        let link = rows[i].cells[3].children[0].href;
+        playlist.push({
+          cover: cover,
+          title: title,
+          artist: artist,
+          link: link,
+        });
+    });
+  }
 }
 
 function showSongList(songList) { // Fill a table with all of the data from the playlist and display it
@@ -97,11 +114,11 @@ function showSongList(songList) { // Fill a table with all of the data from the 
     row.appendChild(document.createElement("td")).appendChild(document.createElement("a"));
 
     let imgCell = row.cells[0].children[0];
-    imgCell.src = playlist[i].cover;
+    imgCell.src = songList[i].cover;
     imgCell.alt = "Album Cover";
     
     let linkCell = row.cells[3].children[0];
-    linkCell.href = playlist[i].link;
+    linkCell.href = songList[i].link;
     linkCell.target = "_blank";
     linkCell.innerHTML = "LINK";
   }
