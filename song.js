@@ -5,4 +5,8 @@ class Song {
     this.artist = artist;
     this.link = link;
   }
+
+  songEquals(song) {
+    return this.cover === song.cover && this.title === song.title && this.artist === song.artist && this.link === song.link;
+  }
 }

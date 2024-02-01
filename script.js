@@ -52,26 +52,37 @@ searchButton.addEventListener("click", function () {
 //   // return list of songs
 // }
 
-function addPlusButtons() {
+function playlistContains(song) {
+  for (let i = 0; i < playlist.length; i++) {
+    if (playlist[i].songEquals(song)) {
+      return true;
+    }
+  }
+  return false
+}
+
+function addPlusButtons() { // Puts a button next to every search result to add it to the playlist
   let rows = document.getElementById("song-list").children[0].rows;
   for (let i = 0; i < rows.length; i++) {
     let button = rows[i].insertCell().appendChild(document.createElement("input"));
     button.type = "button";
     button.value = "+";
-    button.addEventListener("click", function () {
-      if (button.value === "+") {
-        let cover = rows[i].cells[0].children[0].src;
-        let title = rows[i].cells[1].innerHTML;
-        let artist = rows[i].cells[2].innerHTML;
-        let link = rows[i].cells[3].children[0].href;
-        playlist.push(new Song(cover, title, artist, link));
-        button.value = "✓";
-      }
-    });
+    let song = new Song(rows[i].cells[0].children[0].src, rows[i].cells[1].innerHTML, rows[i].cells[2].innerHTML, rows[i].cells[3].children[0].href); // Creates a song object with the data in the HTML table
+    if (!playlistContains(song)) {
+      button.addEventListener("click", function () {
+        if (!playlistContains(song)) {
+          playlist.push(song);
+          button.value = "✓";
+        }
+      });
+    }
+    else {
+      button.value = "✓";
+    }
   }
 }
 
-function addMinusButtons() {
+function addMinusButtons() { // Puts a button next to every song in the playlist to allow the user to remove it
   let rows = document.getElementById("song-list").children[0].rows;
   for (let i = 0; i < rows.length; i++) {
     let button = rows[i].insertCell().appendChild(document.createElement("input"));
@@ -120,7 +131,7 @@ function showSongList(songList) { // Fill a table with all of the data from the 
   HTMLParent.appendChild(table);
 }
 
-function displayPlaylist() {
+function displayPlaylist() { // All the function calls to display the playlist
   showSongList(playlist);
   addMinusButtons();
   backButton.style.display = "none";
