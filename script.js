@@ -12,28 +12,30 @@ let playlist = [
   }
 ]; // Later, make this load playlist from spotify
 
-showPlaylist(); // Start by displaying the playlist
+showSongList(playlist); // Start by displaying the playlist
 
-// searchButton.addEventListener("click", function () => {
-//   let searchType = "";
-//   if (searchTitle.value.length > 0) {
-//     searchType = "title";
-//   }
-//   else if (searchArtist.value.length > 0) {
-//     searchType = "artist";
-//   }
-//   else if (searchAlbum.value.length > 0) {
-//     searchType = "album";
-//   }
-//   else if (searchLink.value.length > 0) {
-//     searchType = "link";
-//   }
-//   else {
-//     return;
-//   }
-
-//   querySpotify(searchType);
-// });
+searchButton.addEventListener("click", function () {
+  // let searchType = "";
+  // if (searchTitle.value.length > 0) {
+  //   searchType = "title";
+  // }
+  // else if (searchArtist.value.length > 0) {
+  //   searchType = "artist";
+  // }
+  // else if (searchAlbum.value.length > 0) {
+  //   searchType = "album";
+  // }
+  // else if (searchLink.value.length > 0) {
+  //   searchType = "link";
+  // }
+  // else {
+  //   return;
+  // }
+  let searchResults;
+  searchResults = []; // For testing only
+  // searchResults = querySpotify(searchType);
+  showSongList(searchResults);
+});
 
 // function querySpotify(searchType) {
 //   if (searchType === "link") {
@@ -42,9 +44,10 @@ showPlaylist(); // Start by displaying the playlist
 //   else {
 //     // Use searchType as the filter for the search query
 //   }
+//   // return list of songs
 // }
 
-function showPlaylist() { // Fill a table with all of the data from the playlist and display it
+function showSongList(songList) { // Fill a table with all of the data from the playlist and display it
   let tableHeaders = ["Album Cover", "Title", "Artist", "Link"];
   let table = document.createElement("table");
   
@@ -55,12 +58,12 @@ function showPlaylist() { // Fill a table with all of the data from the playlist
       appendChild(document.createTextNode(tableHeaders[i]));
   }
 
-  for (let i = 0; i < playlist.length; i++) {
+  for (let i = 0; i < songList.length; i++) {
     table.insertRow();
     let row = table.rows[i];
     row.appendChild(document.createElement("td")).appendChild(document.createElement("img"));
-    row.appendChild(document.createElement("td")).appendChild(document.createTextNode(playlist[i].title));
-    row.appendChild(document.createElement("td")).appendChild(document.createTextNode(playlist[i].artist));
+    row.appendChild(document.createElement("td")).appendChild(document.createTextNode(songList[i].title));
+    row.appendChild(document.createElement("td")).appendChild(document.createTextNode(songList[i].artist));
     row.appendChild(document.createElement("td")).appendChild(document.createElement("a"));
 
     let imgCell = row.cells[0].children[0];
@@ -73,6 +76,9 @@ function showPlaylist() { // Fill a table with all of the data from the playlist
     linkCell.innerHTML = "LINK";
   }
   
-  let songList = document.getElementById("song-list");
-  songList.appendChild(table);
+  let HTMLParent = document.getElementById("song-list");
+  for (let i = HTMLParent.children.length - 1; i >= 0; i--) {
+    HTMLParent.removeChild(HTMLParent.children[i])
+  }
+  HTMLParent.appendChild(table);
 }
