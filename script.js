@@ -11,12 +11,7 @@ let searchAlbum = document.getElementById("album-search");
 4. link -- the link to the song on spotify
 */
 let playlist = [
-  {
-    cover: "https://www.w3schools.com/images/colorpicker2000.png",
-    title: "Mr.Tambourine Man",
-    artist: "Bob Dylan",
-    link: "https://classroom.google.com/u/2/h",
-  }
+  new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h")
 ];
 
 displayPlaylist(); // Start by displaying the playlist
@@ -42,24 +37,9 @@ searchButton.addEventListener("click", function () {
   // }
   let searchResults;
   searchResults = [
-    {
-      cover: "https://www.w3schools.com/images/colorpicker2000.png",
-      title: "Mr.Tambourine Man",
-      artist: "Bob Dylan",
-      link: "https://classroom.google.com/u/2/h",
-    },
-    {
-      cover: "https://www.w3schools.com/images/colorpicker2000.png",
-      title: "Mr.Tambourine Man",
-      artist: "Bob Dylan",
-      link: "https://classroom.google.com/u/2/h",
-    },
-    {
-      cover: "https://www.w3schools.com/images/colorpicker2000.png",
-      title: "Mr.Tambourine Man",
-      artist: "Bob Dylan",
-      link: "https://classroom.google.com/u/2/h",
-    }
+    new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h"),
+    new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h"),
+    new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h")
   ]; // For testing only
   // searchResults = querySpotify(searchType);
   showSongList(searchResults);
@@ -84,12 +64,7 @@ function addPlusButtons() {
         let title = rows[i].cells[1].innerHTML;
         let artist = rows[i].cells[2].innerHTML;
         let link = rows[i].cells[3].children[0].href;
-        playlist.push({
-          cover: cover,
-          title: title,
-          artist: artist,
-          link: link,
-        });
+        playlist.push(new Song(cover, title, artist, link));
         button.value = "✓";
       }
     });
