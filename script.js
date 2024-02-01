@@ -19,12 +19,11 @@ let playlist = [
   }
 ];
 
-showSongList(playlist); // Start by displaying the playlist
+displayPlaylist(); // Start by displaying the playlist
 backButton.style.display = "none"; // Start with this button hidden
 
 backButton.addEventListener("click", function () {
-  showSongList(playlist);
-  backButton.style.display = "none";
+  displayPlaylist();
 });
 
 searchButton.addEventListener("click", function () {
@@ -76,23 +75,36 @@ searchButton.addEventListener("click", function () {
 function addPlusButtons() {
   let rows = document.getElementById("song-list").children[0].rows;
   for (let i = 0; i < rows.length; i++) {
-      let button = rows[i].insertCell().appendChild(document.createElement("input"));
-      button.type = "button";
-      button.value = "+";
-      button.addEventListener("click", function () {
-        if (button.value === "+") {
-          let cover = rows[i].cells[0].children[0].src;
-          let title = rows[i].cells[1].innerHTML;
-          let artist = rows[i].cells[2].innerHTML;
-          let link = rows[i].cells[3].children[0].href;
-          playlist.push({
-            cover: cover,
-            title: title,
-            artist: artist,
-            link: link,
-          });
-          button.value = "✓";
-        }
+    let button = rows[i].insertCell().appendChild(document.createElement("input"));
+    button.type = "button";
+    button.value = "+";
+    button.addEventListener("click", function () {
+      if (button.value === "+") {
+        let cover = rows[i].cells[0].children[0].src;
+        let title = rows[i].cells[1].innerHTML;
+        let artist = rows[i].cells[2].innerHTML;
+        let link = rows[i].cells[3].children[0].href;
+        playlist.push({
+          cover: cover,
+          title: title,
+          artist: artist,
+          link: link,
+        });
+        button.value = "✓";
+      }
+    });
+  }
+}
+
+function addMinusButtons() {
+  let rows = document.getElementById("song-list").children[0].rows;
+  for (let i = 0; i < rows.length; i++) {
+    let button = rows[i].insertCell().appendChild(document.createElement("input"));
+    button.type = "button";
+    button.value = "-";
+    button.addEventListener("click", function () {
+      playlist.splice(i, 1);
+      displayPlaylist();
     });
   }
 }
@@ -131,4 +143,10 @@ function showSongList(songList) { // Fill a table with all of the data from the 
     HTMLParent.removeChild(HTMLParent.children[i])
   }
   HTMLParent.appendChild(table);
+}
+
+function displayPlaylist() {
+  showSongList(playlist);
+  addMinusButtons();
+  backButton.style.display = "none";
 }
