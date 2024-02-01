@@ -4,15 +4,15 @@ let searchTitle = document.getElementById("title-search");
 let searchArtist = document.getElementById("artist-search");
 let searchAlbum = document.getElementById("album-search");
 
-/** Every playlist element should be an object with the following fields:
-1. cover -- a link to a picture of the cover
-2. title -- the song title
-3. artist -- the artist of the song
-4. link -- the link to the song on spotify
-*/
 let playlist = [
   new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h")
-];
+]; // Values only placed here manually for testing
+
+let searchResults = [
+  new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Not Bob Dylan", "https://classroom.google.com/u/2/h"),
+  new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h"),
+  new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h")
+]; // Values only placed here manually for testing
 
 displayPlaylist(); // Start by displaying the playlist
 backButton.style.display = "none"; // Start with this button hidden
@@ -35,12 +35,6 @@ searchButton.addEventListener("click", function () {
   // else {
   //   return;
   // }
-  let searchResults;
-  searchResults = [
-    new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h"),
-    new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h"),
-    new Song("https://www.w3schools.com/images/colorpicker2000.png", "Mr.Tambourine Man", "Bob Dylan", "https://classroom.google.com/u/2/h")
-  ]; // For testing only
   // searchResults = querySpotify(searchType);
   showSongList(searchResults);
   addPlusButtons();
@@ -62,12 +56,11 @@ function playlistContains(song) {
 }
 
 function addPlusButtons() { // Puts a button next to every search result to add it to the playlist
-  let rows = document.getElementById("song-list").children[0].rows;
-  for (let i = 0; i < rows.length; i++) {
+  for (let i = 0; i < searchResults.length; i++) {
     let button = rows[i].insertCell().appendChild(document.createElement("input"));
     button.type = "button";
     button.value = "+";
-    let song = new Song(rows[i].cells[0].children[0].src, rows[i].cells[1].innerHTML, rows[i].cells[2].innerHTML, rows[i].cells[3].children[0].href); // Creates a song object with the data in the HTML table
+    let song = searchResults[i];
     if (!playlistContains(song)) {
       button.addEventListener("click", function () {
         if (!playlistContains(song)) {
