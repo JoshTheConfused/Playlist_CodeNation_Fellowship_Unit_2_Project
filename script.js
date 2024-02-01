@@ -80,16 +80,19 @@ function addPlusButtons() {
       button.type = "button";
       button.value = "+";
       button.addEventListener("click", function () {
-        let cover = rows[i].cells[0].children[0].src;
-        let title = rows[i].cells[1].innerHTML;
-        let artist = rows[i].cells[2].innerHTML;
-        let link = rows[i].cells[3].children[0].href;
-        playlist.push({
-          cover: cover,
-          title: title,
-          artist: artist,
-          link: link,
-        });
+        if (button.value === "+") {
+          let cover = rows[i].cells[0].children[0].src;
+          let title = rows[i].cells[1].innerHTML;
+          let artist = rows[i].cells[2].innerHTML;
+          let link = rows[i].cells[3].children[0].href;
+          playlist.push({
+            cover: cover,
+            title: title,
+            artist: artist,
+            link: link,
+          });
+          button.value = "✓";
+        }
     });
   }
 }
