@@ -63,10 +63,14 @@ function showPlaylist() { // Fill a table with all of the data from the playlist
     row.appendChild(document.createElement("td")).appendChild(document.createTextNode(playlist[i].artist));
     row.appendChild(document.createElement("td")).appendChild(document.createElement("a"));
 
-    row.cells[0].src = playlist[i].cover;
-    row.cells[0].alt = "Album Cover";
-    row.cells[3].href = playlist[i].link;
-    row.cells[3].target = "_blank";
+    let imgCell = row.cells[0].children[0];
+    imgCell.src = playlist[i].cover;
+    imgCell.alt = "Album Cover";
+    
+    let linkCell = row.cells[3].children[0];
+    linkCell.href = playlist[i].link;
+    linkCell.target = "_blank";
+    linkCell.innerHTML = "LINK";
   }
   
   let songList = document.getElementById("song-list");
