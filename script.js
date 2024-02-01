@@ -45,6 +45,7 @@ searchButton.addEventListener("click", function () {
   searchResults = []; // For testing only
   // searchResults = querySpotify(searchType);
   showSongList(searchResults);
+  addPlusButtons();
   backButton.style.display = "block";
 });
 
@@ -52,6 +53,21 @@ searchButton.addEventListener("click", function () {
 //   // Use searchType as the filter for the search query
 //   // return list of songs
 // }
+
+function addPlusButtons() {
+  let rows = document.getElementById("song-list").children[0].rows;
+  for (let i = 1; i < rows.length; i++) {
+    function () {
+      let button = rows[i].insertCell().appendChild(document.createElement("input"));
+      button.type = "button";
+      button.value = "+";
+      button.addEventListener("click", function () {
+        let cover = row.cells[0].children[0];
+        let 
+      });
+    }
+  }
+}
 
 function showSongList(songList) { // Fill a table with all of the data from the playlist and display it
   let tableHeaders = ["Album Cover", "Title", "Artist", "Link"];
