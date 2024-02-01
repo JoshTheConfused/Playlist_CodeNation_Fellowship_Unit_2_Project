@@ -55,18 +55,26 @@ searchButton.addEventListener("click", function () {
 // }
 
 function addPlusButtons() {
-  let rows = document.getElementById("song-list").children[0].rows;
-  for (let i = 1; i < rows.length; i++) {
-    function () {
-      let button = rows[i].insertCell().appendChild(document.createElement("input"));
-      button.type = "button";
-      button.value = "+";
-      button.addEventListener("click", function () {
-        let cover = row.cells[0].children[0];
-        let 
-      });
-    }
-  }
+  // let rows = document.getElementById("song-list").children[0].rows;
+  // for (let i = 1; i < rows.length; i++) {
+  //   function () {
+  //     let button = rows[i].insertCell().appendChild(document.createElement("input"));
+  //     button.type = "button";
+  //     button.value = "+";
+  //     button.addEventListener("click", function () {
+  //       let cover = row.cells[0].children[0].href;
+  //       let title = row.cells[1].children[0];
+  //       let artist = row.cells[0].children[0];
+  //       let link = row.cells[1].children[0].src;
+  //       playlist.push({
+  //         cover: cover,
+  //         title; title,
+  //         artist: artist,
+  //         link: link,
+  //       });
+  //     });
+  //   }
+  // }
 }
 
 function showSongList(songList) { // Fill a table with all of the data from the playlist and display it
