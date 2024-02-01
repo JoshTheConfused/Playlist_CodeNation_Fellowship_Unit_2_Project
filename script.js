@@ -1,8 +1,15 @@
 let searchButton = document.getElementById("search-button");
+let backButton = document.getElementById("playlist-return");
 let searchTitle = document.getElementById("title-search");
 let searchArtist = document.getElementById("artist-search");
 let searchAlbum = document.getElementById("album-search");
-let searchLink = document.getElementById("link-search");
+
+/** Every playlist element should be an object with the following fields:
+1. cover -- a link to a picture of the cover
+2. title -- the song title
+3. artist -- the artist of the song
+4. link -- the link to the song on spotify
+*/
 let playlist = [
   {
     cover: "https://www.w3schools.com/images/colorpicker2000.png",
@@ -10,9 +17,15 @@ let playlist = [
     artist: "Bob Dylan",
     link: "https://classroom.google.com/u/2/h",
   }
-]; // Later, make this load playlist from spotify
+];
 
 showSongList(playlist); // Start by displaying the playlist
+backButton.style.display = "none"; // Start with this button hidden
+
+backButton.addEventListener("click", function () {
+  showSongList(playlist);
+  backButton.style.display = "none";
+});
 
 searchButton.addEventListener("click", function () {
   // let searchType = "";
@@ -25,9 +38,6 @@ searchButton.addEventListener("click", function () {
   // else if (searchAlbum.value.length > 0) {
   //   searchType = "album";
   // }
-  // else if (searchLink.value.length > 0) {
-  //   searchType = "link";
-  // }
   // else {
   //   return;
   // }
@@ -35,15 +45,11 @@ searchButton.addEventListener("click", function () {
   searchResults = []; // For testing only
   // searchResults = querySpotify(searchType);
   showSongList(searchResults);
+  backButton.style.display = "block";
 });
 
 // function querySpotify(searchType) {
-//   if (searchType === "link") {
-//     // Look for the exact song link
-//   }
-//   else {
-//     // Use searchType as the filter for the search query
-//   }
+//   // Use searchType as the filter for the search query
 //   // return list of songs
 // }
 
