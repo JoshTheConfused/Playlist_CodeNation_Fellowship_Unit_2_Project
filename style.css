@@ -13,14 +13,9 @@ body {
 }
 
 table {
+  table-layout: fixed;
   font-size: 20px;
-  width: 80vw;
-}
-
-@media (max-width: 500px) {
-  table {
-    width: 95vw;
-  }
+  width: 95vw;
 }
 
 th {
@@ -31,4 +26,10 @@ td {
   background-color: #888;
   padding: 5px;
   text-align: center;
+}
+
+@media (max-width: 800px) {
+  table {
+    table-layout: auto;
+  }
 }
