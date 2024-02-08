@@ -104,6 +104,7 @@ function showSongList(songList) { // Fill a table with all of the data from the 
     table.insertRow();
     let row = table.rows[i];
     row.appendChild(document.createElement("td")).appendChild(document.createElement("img"));
+    row.cells[0].classList.add("album-cover-cell");
     row.appendChild(document.createElement("td")).appendChild(document.createTextNode(songList[i].title));
     row.appendChild(document.createElement("td")).appendChild(document.createTextNode(songList[i].artist));
     row.appendChild(document.createElement("td")).appendChild(document.createElement("a"));
