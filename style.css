@@ -20,7 +20,7 @@ body {
 
 table {
   table-layout: fixed;
-  font-size: 20px;
+  font-size: 30px;
   width: 95vw;
 }
 
@@ -32,10 +32,15 @@ td {
   background-color: #888;
   padding: 5px;
   text-align: center;
+  height: 150px;
 }
 
 .album-cover-cell {
   background-color: #000;
+}
+
+.album-cover-images {
+  max-height: 150px;
 }
 
 @media (max-width: 800px) {
