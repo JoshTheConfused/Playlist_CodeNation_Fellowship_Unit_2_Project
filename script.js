@@ -15,7 +15,6 @@ let searchResults = [
 ]; // Values only placed here manually for testing
 
 displayPlaylist(); // Start by displaying the playlist
-backButton.style.display = "none"; // Start with this button hidden
 
 backButton.addEventListener("click", function () {
   displayPlaylist();
@@ -38,7 +37,7 @@ searchButton.addEventListener("click", function () {
   // searchResults = querySpotify(searchType);
   showSongList(searchResults);
   addPlusButtons();
-  backButton.style.display = "block";
+  backButton.style.display = "inline";
 });
 
 // function querySpotify(searchType) {
