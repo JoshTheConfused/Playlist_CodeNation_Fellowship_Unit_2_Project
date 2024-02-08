@@ -59,6 +59,7 @@ function addPlusButtons() { // Puts a button next to every search result to add 
     let button = document.getElementById("song-list").children[0].rows[i].insertCell().appendChild(document.createElement("input"));
     button.type = "button";
     button.value = "+";
+    button.classList.add("plus-minus-buttons");
     let song = searchResults[i];
     if (!playlistContains(song)) {
       button.addEventListener("click", function () {
@@ -79,7 +80,8 @@ function addMinusButtons() { // Puts a button next to every song in the playlist
   for (let i = 0; i < rows.length; i++) {
     let button = rows[i].insertCell().appendChild(document.createElement("input"));
     button.type = "button";
-    button.value = "-";
+    button.value = "–";
+    button.classList.add("plus-minus-buttons");
     button.addEventListener("click", function () {
       playlist.splice(i, 1);
       displayPlaylist();
