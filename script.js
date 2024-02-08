@@ -90,7 +90,7 @@ function addMinusButtons() { // Puts a button next to every song in the playlist
 }
 
 function showSongList(songList) { // Fill a table with all of the data from the playlist and display it
-  let tableHeaders = ["Album Cover", "Title", "Artist", "Link"];
+  let tableHeaders = ["Album Cover", "Title", "Artist", "Link", ""];
   let table = document.createElement("table");
   
   let thead = document.createElement('thead');
