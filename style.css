@@ -12,10 +12,23 @@ body {
   background-color: #19b80b;
 }
 
+table {
+  font-size: 20px;
+  width: 80vw;
+}
+
+@media (max-width: 500px) {
+  table {
+    width: 95vw;
+  }
+}
+
 th {
   color: #19b80b;
 }
 
 td {
   background-color: #888;
+  padding: 5px;
+  text-align: center;
 }
