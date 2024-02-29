@@ -21,29 +21,26 @@ backButton.addEventListener("click", function () {
 });
 
 searchButton.addEventListener("click", function () {
-  // let searchType = "";
-  // if (searchTitle.value.length > 0) {
-  //   searchType = "title";
-  // }
-  // else if (searchArtist.value.length > 0) {
-  //   searchType = "artist";
-  // }
-  // else if (searchAlbum.value.length > 0) {
-  //   searchType = "album";
-  // }
-  // else {
-  //   return;
-  // }
-  // searchResults = querySpotify(searchType);
+  querySpotify();
   showSongList(searchResults);
   addPlusButtons();
   backButton.style.display = "inline";
 });
 
-// function querySpotify(searchType) {
-//   // Use searchType as the filter for the search query
-//   // return list of songs
-// }
+function querySpotify() {
+  // Use searchType as the filter for the search query
+  // return list of songs
+  searchResults = [];
+  searchResults.push(new Song("" , searchTitle.value, searchArtist.value, ""));
+  searchResults.push(new Song("", searchTitle.value, "Bad cover artist", ""));
+  searchResults.push(new Song("", searchTitle.value, "Good cover artist", ""));
+  for (let i = 0; i < 10; i++) {
+    searchResults.push(new Song("", `${searchAlbum.value} - Track ${i + 1}`, searchArtist.value, ""));
+  }
+  for (let i = 0; i < 4; i++) {
+    searchResults.push(new Song("", `Other song #${i + 1} by ${searchArtist.value}`, searchArtist.value, ""));
+  }
+}
 
 function playlistContains(song) {
   for (let i = 0; i < playlist.length; i++) {
