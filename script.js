@@ -26,7 +26,7 @@ searchButton.addEventListener("click", function () {
   backButton.style.display = "inline";
 });
 
-function querySpotify() {
+function querySpotify() { // TODO: Use last.fm to get results, use coverartarchive.org for album covers
   // Use searchType as the filter for the search query
   // return list of songs
   searchResults = [];
