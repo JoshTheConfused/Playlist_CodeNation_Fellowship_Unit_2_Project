@@ -20,13 +20,23 @@ backButton.addEventListener("click", function () {
 });
 
 searchButton.addEventListener("click", function () {
-  querySpotify();
+  querySongs();
   showSongList(searchResults);
   addPlusButtons();
   backButton.style.display = "inline";
 });
 
-function querySpotify() { // TODO: Use last.fm to get results, use coverartarchive.org for album covers
+function querySongs() { // TODO: Use last.fm to get results, use coverartarchive.org for album covers
+  const redirectUrl='http://www.last.fm/api/auth/?api_key=bebcbbd5039da513cea152937f307d4a';
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  if (urlParams.has('token')) {
+    const token = urlParams.get('token');
+    console.log(token);
+  }
+  else {
+    window.location.href = redirectUrl;
+  }
   // Use searchType as the filter for the search query
   // return list of songs
   searchResults = [];
