@@ -27,16 +27,32 @@ searchButton.addEventListener("click", function () {
 });
 
 function querySongs() { // TODO: Use last.fm to get results, use coverartarchive.org for album covers
-  const redirectUrl='http://www.last.fm/api/auth/?api_key=bebcbbd5039da513cea152937f307d4a';
+  const apiKey = "bebcbbd5039da513cea152937f307d4a";
+  const redirectUrl=`http://www.last.fm/api/auth/?api_key=${apiKey}`;
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
+  let token;
   if (urlParams.has('token')) {
-    const token = urlParams.get('token');
+    token = urlParams.get('token');
     console.log(token);
   }
   else {
     window.location.href = redirectUrl;
   }
+
+  const apiSig = generateApiSig({api_key : apiKey, method : "auth.getSession", token : token});
+  const Http = new XMLHttpRequest();
+  const AuthUrl=`http://ws.audioscrobbler.com/2.0/?method=auth.getSession&token=${token}&api_key=${apiKey}&api_sig=${apiSig}`;
+  Http.open("GET", AuthUrl);
+  Http.send();
+  Http.onreadystatechange = (e) => {
+    console.log(Http.responseText)
+  } // TODO: finish using session key returned here
+  // TODO: implement other last.fm method calls using session key
+  // Links used: https://www.last.fm/api/accounts https://www.last.fm/api/webauth#create_an_authentication_handler https://www.last.fm/api/show/auth.getSession https://www.last.fm/api/rest
+
+  // TODO: unit 2 survey once finished
+  
   // Use searchType as the filter for the search query
   // return list of songs
   searchResults = [];
@@ -49,6 +65,17 @@ function querySongs() { // TODO: Use last.fm to get results, use coverartarchive
   for (let i = 0; i < 4; i++) {
     searchResults.push(new Song("", `Other song #${i + 1} by ${searchArtist.value}`, searchArtist.value, ""));
   }
+}
+
+function generateApiSig(obj) {
+  let bigString = "";
+  const secret = "f50177584b8eb5cb42da40cec08ab40f";
+  for (const [key, value] of Object.entries(obj)) {
+    bigString += `${key}${value}`;
+  }
+  bigString += secret;
+  signature = md5(bigString); //TODO: get md5 implementation
+  return signature;
 }
 
 function playlistContains(song) {
