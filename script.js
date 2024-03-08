@@ -19,32 +19,32 @@ backButton.addEventListener("click", function () {
 });
 
 searchButton.addEventListener("click", function () {
-  querySongs();
+  querySongs(searchTitle.value, searchArtist.value, searchAlbum.value);
   backButton.style.display = "inline";
 });
 
-function querySongs() {
+function querySongs(title, artist, album) {
   searchResults = [];
   
   let searchUrl
-  if (searchTitle.value.length > 0) {
-    if (searchArtist.value.length > 0) {
-      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${searchTitle.value}&artist=${searchArtist.value}&api_key=${apiKey}&format=json`;
+  if (title.length > 0) {
+    if (artist.length > 0) {
+      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${title.value}&artist=${artist}&api_key=${apiKey}&format=json`;
     }
     else {
-      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${searchTitle.value}&api_key=${apiKey}&format=json`;
+      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${title.value}&api_key=${apiKey}&format=json`;
     }
   }
-  else if (searchArtist.value.length > 0) {
-    if (searchAlbum.value.length > 0) {
-      searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${apiKey}&artist=${searchArtist.value}&album=${searchAlbum.value}&format=json`;
+  else if (artist.length > 0) {
+    if (album.length > 0) {
+      searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${apiKey}&artist=${artist}&album=${album}&format=json`;
     }
     else {
-      searchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${searchArtist.value}&api_key=${apiKey}&format=json`;
+      searchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${artist}&api_key=${apiKey}&format=json`;
     }
   }
-  else if (searchAlbum.value.length > 0) { // TODO: On album search, find the corresponding artist, then do artist + album search
-    searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${searchAlbum.value}&api_key=${apiKey}&format=json`;
+  else if (album.length > 0) { // TODO: On album search, find the corresponding artist, then do artist + album search
+    searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${album}&api_key=${apiKey}&format=json`;
   }
   else {
     searchResults.push(new Song("https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Red_x.svg/600px-Red_x.svg.png", "Try Searching Something", "You have to put something in the search bar", ""));
@@ -58,40 +58,45 @@ function querySongs() {
 
   Http.onreadystatechange = (e) => {
     let results;
-    if (searchTitle.value.length > 0) {
+    if (title.length > 0) {
       results = JSON.parse(Http.responseText).results.trackmatches.track;
     }
-    else if (searchArtist.value.length > 0) {
-      if (searchAlbum.value.length > 0) {
+    else if (artist.length > 0) {
+      if (album.length > 0) {
         results = JSON.parse(Http.responseText).album.tracks.track;
       }
       else {
         results = JSON.parse(Http.responseText).toptracks.track;
       }
     }
+    else if (album.length > 0) {
+      results = JSON.parse(Http.responseText).results.albummatches.album[0];
+      querySongs("", results.artist, results.name);
+      return;
+    }
     console.log(results);
     
     for (let i = 0 ; i < Math.min(30, results.length) ; i ++) {
       // TODO: Actually make the album cover work
-      // let img = results[i].image[1];
-      // console.log("img #" + i + ": " + img);
+      // let resultImg = results[i].image[1];
+      // console.log("img #" + i + ": " + resultImg);
       
-      let title = results[i].name;
-      console.log("title #" + i + ": " + title);
+      let resultTitle = results[i].name;
+      console.log("title #" + i + ": " + resultTitle);
       
-      let artist;
-      if (searchTitle.value.length > 0) {
-        artist = results[i].artist;
+      let resultArtist;
+      if (title.length > 0) {
+        resultArtist = results[i].artist;
       }
-      else if (searchArtist.value.length > 0) {
-        artist = results[i].artist.name;
+      else if (artist.length > 0) {
+        resultArtist = results[i].artist.name;
       }
-      console.log("artist #" + i + ": " + artist);
+      console.log("artist #" + i + ": " + resultArtist);
       
-      let link = results[i].url;
-      console.log("link #" + i + ": " + link);
+      let resultLink = results[i].url;
+      console.log("link #" + i + ": " + resultLink);
       
-      searchResults.push(new Song("", title, artist, link));
+      searchResults.push(new Song("", resultTitle, resultArtist, resultLink));
     }
     showSongList(searchResults);
     addPlusButtons();
