@@ -3,7 +3,7 @@ class Song {
     this.cover = cover; // Link to an image of the album cover
     this.title = title; // Title of the song
     this.artist = artist; // The artist
-    this.link = link; // Spotify play link for the song
+    this.link = link; // Link to the song
   }
 
   songEquals(song) {

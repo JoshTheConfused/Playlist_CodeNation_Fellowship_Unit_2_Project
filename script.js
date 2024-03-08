@@ -11,28 +11,28 @@ let session; // Used for all API searches
 let playlist = []; // Values only placed here manually for testing
 let searchResults = []; // Values only placed here manually for testing
 
-document.addEventListener('DOMContentLoaded', function() { // When the page loads, the user is made to log in, creating the necessary session
-  const redirectUrl=`http://www.last.fm/api/auth/?api_key=${apiKey}`;
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
+// document.addEventListener('DOMContentLoaded', function() { // When the page loads, the user is made to log in, creating the necessary session
+//   const redirectUrl=`http://www.last.fm/api/auth/?api_key=${apiKey}`;
+//   const queryString = window.location.search;
+//   const urlParams = new URLSearchParams(queryString);
   
-  if (urlParams.has('token')) {
-    token = urlParams.get('token');
-  }
-  else {
-    window.location.href = redirectUrl;
-  }
+//   if (urlParams.has('token')) {
+//     token = urlParams.get('token');
+//   }
+//   else {
+//     window.location.href = redirectUrl;
+//   }
 
-  const apiSig = generateApiSig({api_key : apiKey, method : "auth.getSession", token : token});
-  const Http = new XMLHttpRequest();
-  const AuthUrl=`https://ws.audioscrobbler.com/2.0/?method=auth.getSession&token=${token}&api_key=${apiKey}&api_sig=${apiSig}`;
-  Http.open("GET", AuthUrl);
-  Http.send();
+//   const apiSig = generateApiSig({api_key : apiKey, method : "auth.getSession", token : token});
+//   const Http = new XMLHttpRequest();
+//   const authUrl=`https://ws.audioscrobbler.com/2.0/?method=auth.getSession&token=${token}&api_key=${apiKey}&api_sig=${apiSig}`;
+//   Http.open("GET", authUrl);
+//   Http.send();
   
-  Http.onreadystatechange = (e) => {
-    session = getSessionKey(Http.responseText);
-  }
-}, false);
+//   Http.onreadystatechange = (e) => {
+//     session = getSessionKey(Http.responseText);
+//   }
+// }, false);
 
 displayPlaylist(); // Start by displaying the playlist
 
@@ -51,23 +51,33 @@ searchButton.addEventListener("click", function () {
 });
 
 function querySongs() { // TODO: Use last.fm to get results, use coverartarchive.org for album covers
+  searchResults = [];
   // TODO: implement other last.fm method calls using session key
+  const Http = new XMLHttpRequest();
+  const searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${searchTitle.value}&api_key=${apiKey}&format=json`;
+  Http.open("GET", searchUrl);
+  Http.send();
+
+  Http.onreadystatechange = (e) => {
+    const results = JSON.parse(Http.responseText).results.trackmatches.track;
+    console.log(results);
+
+    for (let i = 0 ; i < Math.min(30, results.length) ; i ++) {
+      let img = results[i].image[1].text;
+      console.log("img #" + i + ": " + img);
+      let title = results[i].name;
+      console.log("title #" + i + ": " + title);
+      let artist = results[i].artist;
+      console.log("artist #" + i + ": " + artist);
+      let link = results[i].url;
+      console.log("link #" + i + ": " + link);
+      searchResults.push(new Song("", title, artist, link));
+    }
+    showSongList(searchResults);
+  }
   // Links used: https://www.last.fm/api/accounts https://www.last.fm/api/webauth#create_an_authentication_handler https://www.last.fm/api/show/auth.getSession https://www.last.fm/api/rest
 
   // TODO: unit 2 survey once finished
-  
-  // Use searchType as the filter for the search query
-  // return list of songs
-  searchResults = [];
-  searchResults.push(new Song("" , searchTitle.value, searchArtist.value, ""));
-  searchResults.push(new Song("", searchTitle.value, "Bad cover artist", ""));
-  searchResults.push(new Song("", searchTitle.value, "Good cover artist", ""));
-  for (let i = 0; i < 10; i++) {
-    searchResults.push(new Song("", `${searchAlbum.value} - Track ${i + 1}`, searchArtist.value, ""));
-  }
-  for (let i = 0; i < 4; i++) {
-    searchResults.push(new Song("", `Other song #${i + 1} by ${searchArtist.value}`, searchArtist.value, ""));
-  }
 }
 
 function getSessionKey(responseText) { // I'm sure there's a better way to do this, but this finds and extracts the session key from the http response
