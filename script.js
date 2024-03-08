@@ -34,7 +34,6 @@ function querySongs() { // TODO: Use last.fm to get results, use coverartarchive
   let token;
   if (urlParams.has('token')) {
     token = urlParams.get('token');
-    console.log(token);
   }
   else {
     window.location.href = redirectUrl;
@@ -42,12 +41,14 @@ function querySongs() { // TODO: Use last.fm to get results, use coverartarchive
 
   const apiSig = generateApiSig({api_key : apiKey, method : "auth.getSession", token : token});
   const Http = new XMLHttpRequest();
-  const AuthUrl=`http://ws.audioscrobbler.com/2.0/?method=auth.getSession&token=${token}&api_key=${apiKey}&api_sig=${apiSig}`;
+  const AuthUrl=`https://ws.audioscrobbler.com/2.0/?method=auth.getSession&token=${token}&api_key=${apiKey}&api_sig=${apiSig}`;
   Http.open("GET", AuthUrl);
   Http.send();
+  let session;
   Http.onreadystatechange = (e) => {
-    console.log(Http.responseText)
-  } // TODO: finish using session key returned here
+    session = getSessionKey(Http.responseText);
+  }
+  
   // TODO: implement other last.fm method calls using session key
   // Links used: https://www.last.fm/api/accounts https://www.last.fm/api/webauth#create_an_authentication_handler https://www.last.fm/api/show/auth.getSession https://www.last.fm/api/rest
 
@@ -67,6 +68,15 @@ function querySongs() { // TODO: Use last.fm to get results, use coverartarchive
   }
 }
 
+function getSessionKey(responseText) { // I'm sure there's a better way to do this, but this finds and extracts the session key from the http response
+  for (let i = 5; i < responseText.length; i++) {
+    if (responseText.substring(i - 5, i) === "<key>") {
+      return(responseText.substring(i, i + 32));
+    }
+  }
+  return "THISWILLNOTWORK";
+}
+
 function generateApiSig(obj) {
   let bigString = "";
   const secret = "f50177584b8eb5cb42da40cec08ab40f";
@@ -74,7 +84,7 @@ function generateApiSig(obj) {
     bigString += `${key}${value}`;
   }
   bigString += secret;
-  signature = md5(bigString); //TODO: get md5 implementation
+  signature = md5(bigString);
   return signature;
 }
 
