@@ -5,34 +5,9 @@ let searchArtist = document.getElementById("artist-search");
 let searchAlbum = document.getElementById("album-search");
 
 const apiKey = "bebcbbd5039da513cea152937f307d4a"; // Used for all API calls
-let token; // One-time use for generating the session
-let session; // Used for all API searches
 
 let playlist = []; // Values only placed here manually for testing
 let searchResults = []; // Values only placed here manually for testing
-
-// document.addEventListener('DOMContentLoaded', function() { // When the page loads, the user is made to log in, creating the necessary session
-//   const redirectUrl=`http://www.last.fm/api/auth/?api_key=${apiKey}`;
-//   const queryString = window.location.search;
-//   const urlParams = new URLSearchParams(queryString);
-  
-//   if (urlParams.has('token')) {
-//     token = urlParams.get('token');
-//   }
-//   else {
-//     window.location.href = redirectUrl;
-//   }
-
-//   const apiSig = generateApiSig({api_key : apiKey, method : "auth.getSession", token : token});
-//   const Http = new XMLHttpRequest();
-//   const authUrl=`https://ws.audioscrobbler.com/2.0/?method=auth.getSession&token=${token}&api_key=${apiKey}&api_sig=${apiSig}`;
-//   Http.open("GET", authUrl);
-//   Http.send();
-  
-//   Http.onreadystatechange = (e) => {
-//     session = getSessionKey(Http.responseText);
-//   }
-// }, false);
 
 displayPlaylist(); // Start by displaying the playlist
 
@@ -50,9 +25,8 @@ searchButton.addEventListener("click", function () {
   backButton.style.display = "inline";
 });
 
-function querySongs() { // TODO: Use last.fm to get results, use coverartarchive.org for album covers
+function querySongs() {
   searchResults = [];
-  // TODO: implement other last.fm method calls using session key
   const Http = new XMLHttpRequest();
   const searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${searchTitle.value}&api_key=${apiKey}&format=json`;
   Http.open("GET", searchUrl);
@@ -63,7 +37,7 @@ function querySongs() { // TODO: Use last.fm to get results, use coverartarchive
     console.log(results);
 
     for (let i = 0 ; i < Math.min(30, results.length) ; i ++) {
-      let img = results[i].image[1].text;
+      let img = results[i].image[1].innerText;
       console.log("img #" + i + ": " + img);
       let title = results[i].name;
       console.log("title #" + i + ": " + title);
@@ -71,33 +45,12 @@ function querySongs() { // TODO: Use last.fm to get results, use coverartarchive
       console.log("artist #" + i + ": " + artist);
       let link = results[i].url;
       console.log("link #" + i + ": " + link);
-      searchResults.push(new Song("", title, artist, link));
+      searchResults.push(new Song(img, title, artist, link));
     }
     showSongList(searchResults);
   }
-  // Links used: https://www.last.fm/api/accounts https://www.last.fm/api/webauth#create_an_authentication_handler https://www.last.fm/api/show/auth.getSession https://www.last.fm/api/rest
 
   // TODO: unit 2 survey once finished
-}
-
-function getSessionKey(responseText) { // I'm sure there's a better way to do this, but this finds and extracts the session key from the http response
-  for (let i = 5; i < responseText.length; i++) {
-    if (responseText.substring(i - 5, i) === "<key>") {
-      return(responseText.substring(i, i + 32));
-    }
-  }
-  return "THISWILLNOTWORK";
-}
-
-function generateApiSig(obj) {
-  let bigString = "";
-  const secret = "f50177584b8eb5cb42da40cec08ab40f";
-  for (const [key, value] of Object.entries(obj)) {
-    bigString += `${key}${value}`;
-  }
-  bigString += secret;
-  signature = md5(bigString);
-  return signature;
 }
 
 function playlistContains(song) {
