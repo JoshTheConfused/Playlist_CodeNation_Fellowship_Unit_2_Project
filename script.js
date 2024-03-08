@@ -20,34 +20,71 @@ backButton.addEventListener("click", function () {
 
 searchButton.addEventListener("click", function () {
   querySongs();
-  showSongList(searchResults);
-  addPlusButtons();
   backButton.style.display = "inline";
 });
 
 function querySongs() {
   searchResults = [];
+  
+  let searchUrl
+  if (searchTitle.value.length > 0) {
+    if (searchArtist.value.length > 0) {
+      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${searchTitle.value}&artist=${searchArtist.value}&api_key=${apiKey}&format=json`;
+    }
+    else {
+      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${searchTitle.value}&api_key=${apiKey}&format=json`;
+    }
+  }
+  else if (searchArtist.value.length > 0) {
+    searchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${searchArtist.value}&api_key=${apiKey}&format=json`;
+  }
+  else if (searchAlbum.value.length > 0) {
+    searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${searchAlbum.value}&api_key=${apiKey}&format=json`;
+  }
+  else {
+    searchResults.push(new Song("https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Red_x.svg/600px-Red_x.svg.png", "Try Searching Something", "You have to put something in the search bar", ""));
+    showSongList(searchResults);
+    return;
+  }
+  
   const Http = new XMLHttpRequest();
-  const searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${searchTitle.value}&api_key=${apiKey}&format=json`;
   Http.open("GET", searchUrl);
   Http.send();
 
   Http.onreadystatechange = (e) => {
-    const results = JSON.parse(Http.responseText).results.trackmatches.track;
-    console.log(results);
+    let results;
+    if (searchTitle.value.length > 0) {
+      results = JSON.parse(Http.responseText).results.trackmatches.track;
+      console.log(results);
+    }
+    else if (searchArtist.value.length > 0) {
+      results = JSON.parse(Http.responseText).toptracks.track;
+      console.log(results);
+    }
 
     for (let i = 0 ; i < Math.min(30, results.length) ; i ++) {
-      let img = results[i].image[1].innerText;
+      let img = results[i].image[1]; // TODO: Actually get the album cover out
       console.log("img #" + i + ": " + img);
+      
       let title = results[i].name;
       console.log("title #" + i + ": " + title);
-      let artist = results[i].artist;
+      
+      let artist;
+      if (searchTitle.value.length > 0) {
+        artist = results[i].artist;
+      }
+      else if (searchArtist.value.length > 0) {
+        artist = results[i].artist.name;
+      }
       console.log("artist #" + i + ": " + artist);
+      
       let link = results[i].url;
       console.log("link #" + i + ": " + link);
+      
       searchResults.push(new Song(img, title, artist, link));
     }
     showSongList(searchResults);
+    addPlusButtons();
   }
 
   // TODO: unit 2 survey once finished
