@@ -43,7 +43,7 @@ function querySongs() {
       searchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${searchArtist.value}&api_key=${apiKey}&format=json`;
     }
   }
-  else if (searchAlbum.value.length > 0) {
+  else if (searchAlbum.value.length > 0) { // TODO: On album search, find the corresponding artist, then do artist + album search
     searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${searchAlbum.value}&api_key=${apiKey}&format=json`;
   }
   else {
@@ -96,8 +96,6 @@ function querySongs() {
     showSongList(searchResults);
     addPlusButtons();
   }
-
-  // TODO: unit 2 survey once finished
 }
 
 function playlistContains(song) {
