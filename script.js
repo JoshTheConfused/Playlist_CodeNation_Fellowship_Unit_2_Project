@@ -36,7 +36,12 @@ function querySongs() {
     }
   }
   else if (searchArtist.value.length > 0) {
-    searchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${searchArtist.value}&api_key=${apiKey}&format=json`;
+    if (searchAlbum.value.length > 0) {
+      searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=${apiKey}&artist=${searchArtist.value}&album=${searchAlbum.value}&format=json`;
+    }
+    else {
+      searchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${searchArtist.value}&api_key=${apiKey}&format=json`;
+    }
   }
   else if (searchAlbum.value.length > 0) {
     searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${searchAlbum.value}&api_key=${apiKey}&format=json`;
@@ -55,16 +60,21 @@ function querySongs() {
     let results;
     if (searchTitle.value.length > 0) {
       results = JSON.parse(Http.responseText).results.trackmatches.track;
-      console.log(results);
     }
     else if (searchArtist.value.length > 0) {
-      results = JSON.parse(Http.responseText).toptracks.track;
-      console.log(results);
+      if (searchAlbum.value.length > 0) {
+        results = JSON.parse(Http.responseText).album.tracks.track;
+      }
+      else {
+        results = JSON.parse(Http.responseText).toptracks.track;
+      }
     }
-
+    console.log(results);
+    
     for (let i = 0 ; i < Math.min(30, results.length) ; i ++) {
-      let img = results[i].image[1]; // TODO: Actually get the album cover out
-      console.log("img #" + i + ": " + img);
+      // TODO: Actually make the album cover work
+      // let img = results[i].image[1];
+      // console.log("img #" + i + ": " + img);
       
       let title = results[i].name;
       console.log("title #" + i + ": " + title);
@@ -81,7 +91,7 @@ function querySongs() {
       let link = results[i].url;
       console.log("link #" + i + ": " + link);
       
-      searchResults.push(new Song(img, title, artist, link));
+      searchResults.push(new Song("", title, artist, link));
     }
     showSongList(searchResults);
     addPlusButtons();
