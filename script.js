@@ -29,10 +29,10 @@ function querySongs(title, artist, album) {
   let searchUrl
   if (title.length > 0) {
     if (artist.length > 0) {
-      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${title.value}&artist=${artist}&api_key=${apiKey}&format=json`;
+      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${title}&artist=${artist}&api_key=${apiKey}&format=json`;
     }
     else {
-      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${title.value}&api_key=${apiKey}&format=json`;
+      searchUrl=`https://ws.audioscrobbler.com/2.0/?method=track.search&track=${title}&api_key=${apiKey}&format=json`;
     }
   }
   else if (artist.length > 0) {
@@ -43,7 +43,7 @@ function querySongs(title, artist, album) {
       searchUrl = `https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${artist}&api_key=${apiKey}&format=json`;
     }
   }
-  else if (album.length > 0) { // TODO: On album search, find the corresponding artist, then do artist + album search
+  else if (album.length > 0) {
     searchUrl = `https://ws.audioscrobbler.com/2.0/?method=album.search&album=${album}&api_key=${apiKey}&format=json`;
   }
   else {
@@ -58,6 +58,7 @@ function querySongs(title, artist, album) {
 
   Http.onreadystatechange = (e) => {
     let results;
+    let mbid;
     if (title.length > 0) {
       results = JSON.parse(Http.responseText).results.trackmatches.track;
     }
@@ -71,15 +72,17 @@ function querySongs(title, artist, album) {
     }
     else if (album.length > 0) {
       results = JSON.parse(Http.responseText).results.albummatches.album[0];
-      querySongs("", results.artist, results.name);
+      querySongs("", results.artist, results.name); // If only the album name is given, find track names using artist name from the top album and album.getinfo
+      mbid = results.mbid;
       return;
     }
     console.log(results);
     
     for (let i = 0 ; i < Math.min(30, results.length) ; i ++) {
       // TODO: Actually make the album cover work
-      // let resultImg = results[i].image[1];
-      // console.log("img #" + i + ": " + resultImg);
+      if (album.length === 0) {
+        mbid = results[i].mbid;
+      }
       
       let resultTitle = results[i].name;
       console.log("title #" + i + ": " + resultTitle);
@@ -96,7 +99,7 @@ function querySongs(title, artist, album) {
       let resultLink = results[i].url;
       console.log("link #" + i + ": " + resultLink);
       
-      searchResults.push(new Song("", resultTitle, resultArtist, resultLink));
+      searchResults.push(new Song(mbid, resultTitle, resultArtist, resultLink)); // Stores mbid in img slot to later be processed into final image link
     }
     showSongList(searchResults);
     addPlusButtons();
