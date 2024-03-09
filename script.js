@@ -76,16 +76,13 @@ function querySongs(title, artist, album) {
       mbid = results.mbid;
       return;
     }
-    console.log(results);
     
     for (let i = 0 ; i < Math.min(30, results.length) ; i ++) {
-      // TODO: Actually make the album cover work
       if (album.length === 0) {
         mbid = results[i].mbid;
       }
       
       let resultTitle = results[i].name;
-      console.log("title #" + i + ": " + resultTitle);
       
       let resultArtist;
       if (title.length > 0) {
@@ -94,15 +91,47 @@ function querySongs(title, artist, album) {
       else if (artist.length > 0) {
         resultArtist = results[i].artist.name;
       }
-      console.log("artist #" + i + ": " + resultArtist);
       
       let resultLink = results[i].url;
-      console.log("link #" + i + ": " + resultLink);
       
       searchResults.push(new Song(mbid, resultTitle, resultArtist, resultLink)); // Stores mbid in img slot to later be processed into final image link
+      
     }
+    loadAlbumCovers();
     showSongList(searchResults);
     addPlusButtons();
+  }
+}
+
+function loadAlbumCovers() {
+  for (let i = 0 ; i < searchResults.length ; i++) {
+    const url = `https://coverartarchive.org/release/${searchResults[i].cover}`;
+    const Http = new XMLHttpRequest();
+    Http.open("GET", url);
+    Http.send();
+
+    Http.onreadystatechange = (e) => {
+      console.log(i + ": response: " + Http.responseText);
+      if (Http.status == 400 || Http.status == 404) {
+        searchResults[i].cover = "https://www.ncenet.com/wp-content/uploads/2020/04/No-image-found.jpg";
+      }
+      else { // This is terrible and I hate it, but technically it does work
+        let id;
+        for (let k = 4 ; k < Http.responseText.length ; k++) {
+          if (Http.responseText.substring(k - 4, k) == "\"id\"") {
+            let j = k + 1;
+            while (!isNaN(Http.responseText.charAt(j))) {
+              j++;
+            }
+            id = Http.responseText.substring(k + 1, j);
+            break;
+          }
+        }
+        searchResults[i].cover = `https://ia601604.us.archive.org/28/items/mbid-${searchResults[i].cover}/mbid-${searchResults[i].cover}-${id}_thumb500.jpg`;
+      }
+      showSongList(searchResults);
+      addPlusButtons();
+    }
   }
 }
 
